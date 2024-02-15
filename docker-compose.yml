@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  demo-chat:
+    build: ""
+    container_name: demo-chat
+    restart: on-failure
+    extra_hosts:
+      - host.docker.public:host-gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./bin:/go/app/bin
+    platform: linux/amd64
+    env_file:
+      - src/.env
+
+  redis-service:
+    image: redis:6.2-alpine
+    restart: on-failure
+    extra_hosts:
+      - host.docker.public:host-gateway
+    ports:
+      - "6379:6379"
+    platform: linux/amd64
