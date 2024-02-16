@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/dacalin/ws_gateway v0.0.7
+	github.com/dacalin/ws_gateway v0.0.8
 )
 
 require (
