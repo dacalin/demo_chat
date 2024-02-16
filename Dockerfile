@@ -5,7 +5,6 @@ FROM golang:1.21 AS builder
 
 RUN apt-get update
 
-
 WORKDIR /src
 COPY ./src /src
 # Fetch dependencies.

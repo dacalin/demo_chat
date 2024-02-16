@@ -5,16 +5,27 @@ import (
 	"github.com/dacalin/demo_chat/bootstrap"
 	"github.com/dacalin/ws_gateway"
 	_connection_id "github.com/dacalin/ws_gateway/models/connection_id"
-	"strconv"
 )
 
 func main() {
 	ctx := context.Background()
 	config := bootstrap.GetConfig()
-	redidAddress := config.RedisHost + ":" + strconv.Itoa(config.RedisPort)
 
-	wsGatewayConnection := ws_gateway.CreateConnectionGateway()
-	wsServer := ws_gateway.CreateServer(redidAddress, config.WsPingIntervalSeconds, ctx)
+	WSConfig := ws_gateway.Config{
+		Driver:         "gws",
+		EnableDebugLog: true,
+		GWSDriver: ws_gateway.GWSDriverConfig{
+			RedisHost:           config.RedisHost,
+			RedisPort:           config.RedisPort,
+			PingIntervalSeconds: config.WsPingIntervalSeconds,
+			WSRoute:             "connect",
+		},
+	}
+
+	wsServer, wsGatewayConnection, err := ws_gateway.Create(WSConfig, ctx)
+	if err != nil {
+		panic(err)
+	}
 
 	wsServer.OnConnect(func(connectionId _connection_id.ConnectionId, params map[string]string) {
 		wsGatewayConnection.SetGroup(connectionId, "demo-room")
