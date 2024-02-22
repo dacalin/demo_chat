@@ -5,6 +5,7 @@ import (
 	"github.com/dacalin/demo_chat/bootstrap"
 	"github.com/dacalin/ws_gateway"
 	_connection_id "github.com/dacalin/ws_gateway/models/connection_id"
+	"time"
 )
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 
 	WSConfig := ws_gateway.Config{
 		Driver:         ws_gateway.DRIVER_WS_GWS,
-		EnableDebugLog: true,
+		EnableDebugLog: false,
 		GWSDriver: ws_gateway.GWSDriverConfig{
 			PubSub: ws_gateway.PubSubDriverConfig{
 				Driver: ws_gateway.DRIVER_PUBSUB_REDIS,
@@ -36,6 +37,7 @@ func main() {
 
 	wsServer1.OnMessage(
 		func(connectionId _connection_id.ConnectionId, data []byte) {
+			time.Sleep(10 * time.Second)
 			wsGatewayConnection1.Broadcast("demo-room", data)
 		})
 

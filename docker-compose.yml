@@ -1,5 +1,9 @@
 version: "3.9"
 
+networks:
+  demo_chat:
+    name: demo_chat
+
 services:
   demo-chat:
     build: ""
@@ -7,12 +11,22 @@ services:
     restart: on-failure
     extra_hosts:
       - host.docker.public:host-gateway
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 500M
+        reservations:
+          cpus: '3'
+          memory: 100M
     ports:
       - "8080:8080"
       - "8081:8081"
     platform: linux/amd64
     env_file:
       - src/.env
+    networks:
+      - demo_chat
 
   redis-service:
     image: redis:6.2-alpine
@@ -22,3 +36,5 @@ services:
     ports:
       - "6379:6379"
     platform: linux/amd64
+    networks:
+      - demo_chat
