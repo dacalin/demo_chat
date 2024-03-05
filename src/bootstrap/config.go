@@ -10,6 +10,7 @@ type Config struct {
 	WsPingIntervalSeconds int    `env:"WS_PING_INTERVAL_SECONDS"`
 	RedisHost             string `env:"REDIS_HOST"`
 	RedisPort             int    `env:"REDIS_PORT"`
+	Debug                 bool   `env:"DEBUG"`
 }
 
 func GetConfig() Config {

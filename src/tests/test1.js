@@ -6,7 +6,10 @@ import  { check } from 'k6';
 export const options = {
     // Key configurations for avg load test in this section
     stages: [
-        { duration: '30s', target: 1000 }, // stay at 100 users for 30 minutes
+        { duration: '10s', target: 100 }, // stay at 100 users for 30 minutes
+        { duration: '10s', target: 200 }, // stay at 100 users for 30 minutes
+        { duration: '20s', target: 500 }, // stay at 100 users for 30 minutes
+
     ],
 };
 
@@ -20,7 +23,7 @@ export default function () {
 
 function runWebSocket(player){
     //console.log("connecting", player)
-    const url = 'ws://demo-chat:8080/connect'+'?cid='+player;
+    const url = 'ws://host.docker.internal:8080/connect'+'?cid='+player;
     const params = { tags: { my_tag: 'hello' } };
 
     return ws.connect(url, params, function (socket) {
@@ -28,18 +31,12 @@ function runWebSocket(player){
             //console.log('connected');
             socket.setInterval(function timeout() {
                 //socket.send("hi" + randomIntBetween(1, 1000));
-                socket.send("ping");
+                socket.send("hello");
 
-            }, randomIntBetween(50, 55));
+            }, randomIntBetween(10000, 10000));
         });
-        socket.on('ping', () => console.log('PING!'));
-        socket.on('pong', () => console.log('PONG!'));
-        socket.on('close', () => console.log(player + 'disconnected'));
-        socket.on('error', (e) => {
-            if (e.error() != 'websocket: close sent') {
-                console.log('An unexpected error occurred: ', e.error());
-            }
-        });
+        //socket.on('close', () => console.log(player + ' disconnected'));
+
         socket.on('message', (data) => {
             //console.log("a msg is received", data)
         });

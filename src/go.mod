@@ -4,7 +4,8 @@ go 1.21.5
 
 require (
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/dacalin/ws_gateway v0.0.11
+	github.com/dacalin/http-pprof-switch v0.0.1
+	github.com/dacalin/ws_gateway v0.0.20
 )
 
 require (
@@ -13,4 +14,5 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/lxzan/gws v1.7.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-chat-svc
+  labels:
+    zone: dev
+    app: demo-chat
+
+spec:
+  type: NodePort
+  ports:
+    - port: 8000
+      targetPort: 6379
+  selector:
+    app: demo-chat

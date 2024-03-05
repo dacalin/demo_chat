@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-chat-dpy
+  labels:
+    zone: dev
+    version: v0
+spec:
+  replicas: 15
+  selector:
+    matchLabels:
+      app: demo-chat
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      name: demo-chat-pod
+      labels:
+        app: demo-chat
+        zone: prod
+        version: v0
+    spec:
+      containers:
+        - name: demo-chat-ctr
+          image: dacalin/demo-chat:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+              name: health-port
+            - containerPort: 8080
+              name: ws-port
+            - containerPort: 8081
+              name: ws-port-admin
+            - containerPort: 6379
+              name: redis
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "0.1"
+            limits:
+              memory: "500Mi"
+              cpu: "0.2"
+          env:
+            - name: WS_PORT
+              value: "8080"
+            - name: WS_PING_INTERVAL_SECONDS
+              value: "605"
+            - name: HTTP_PORT
+              value: "80"
+            - name: REDIS_HOST
+              value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: DEBUG
+              value: "false"
+
+

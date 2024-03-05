@@ -2,19 +2,30 @@ package main
 
 import (
 	"context"
+	_ "context"
 	"github.com/dacalin/demo_chat/bootstrap"
+	_ "github.com/dacalin/demo_chat/bootstrap"
+	_ "github.com/dacalin/http-pprof-switch"
 	"github.com/dacalin/ws_gateway"
+	_ "github.com/dacalin/ws_gateway"
 	_connection_id "github.com/dacalin/ws_gateway/models/connection_id"
-	"time"
+	"net/http"
 )
 
 func main() {
+	go func() {
+		http.HandleFunc("/status", func(writer http.ResponseWriter, request *http.Request) {
+			writer.Write([]byte("1"))
+		})
+		http.ListenAndServe("0.0.0.0:9000", nil)
+	}()
+
 	ctx := context.Background()
 	config := bootstrap.GetConfig()
 
 	WSConfig := ws_gateway.Config{
 		Driver:         ws_gateway.DRIVER_WS_GWS,
-		EnableDebugLog: false,
+		EnableDebugLog: config.Debug,
 		GWSDriver: ws_gateway.GWSDriverConfig{
 			PubSub: ws_gateway.PubSubDriverConfig{
 				Driver: ws_gateway.DRIVER_PUBSUB_REDIS,
@@ -37,7 +48,6 @@ func main() {
 
 	wsServer1.OnMessage(
 		func(connectionId _connection_id.ConnectionId, data []byte) {
-			time.Sleep(10 * time.Second)
 			wsGatewayConnection1.Broadcast("demo-room", data)
 		})
 

@@ -19,7 +19,7 @@ RUN env GOOS=linux GOARCH=arm64 go build -o /go/bin/app ./main.go
 ############################
 # STEP 2 build a small image
 ############################
-FROM scratch
+FROM alpine
 # Copy our static executable.
 COPY --from=builder /go/bin/app /go/bin/app
 # Run the binary.
